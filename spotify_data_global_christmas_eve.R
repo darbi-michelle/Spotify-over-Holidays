@@ -60,10 +60,10 @@ SpotifyScrape <- function(x){
   
   #Combining scraped data into a tibble
   
-  chart <- cbind(rank, track, artist, streams, dates) # Combine R Objects by Columns
-  names(chart) <- c("Rank", "Track", "Artist", "Streams", "Date") # Functions to get or set the names of an object
-  chart <- as_tibble(chart) #turns an existing object into a tibble (Tibble package)
-  return(chart) # Final tibble 5 columns & (200 rows * 12 days) = 2400
+  chart <- cbind(rank, track, artist, streams, dates) 
+  names(chart) <- c("Rank", "Track", "Artist", "Streams", "Date") 
+  chart <- as_tibble(chart) 
+  return(chart) 
 }
 
 global_data_raw <- map_df(holiday_global_url, SpotifyScrape) 
@@ -138,4 +138,5 @@ top_10_xmas_eve_global_n %>%
   theme_classic() +
   scale_y_continuous(expand = c(0,0)) +
   facet_grid(cols = vars(Year))
+ggsave("Christmas_eve_top_10.png", height = 17.5, width = 34, units= "cm")
   
