@@ -92,16 +92,6 @@ head(global_data_clean)
 summary(global_data_clean)
 
 #Visualising the data
-
-top_10_xmas_eve_global <- global_data_clean %>%
-  filter(Day == "24-12") %>%
-  arrange(Year, desc(Streams) ) %>%
-  group_by(Track, Year) %>%
-  filter(Rank %in% c(1:10)) %>%
-  mutate(Track = gsub(" -.*", "", Track)) %>%
-  arrange(Rank)
-top_10_xmas_eve_global
-
 monthly_users <- read_xlsx("spotify_mau.xlsx", sheet = 2, range = "B13:C28", 
                            col_names = c("Quarter", "MAU"), 
                            col_types = c("text", "numeric")) %>%
@@ -122,21 +112,36 @@ top_10_xmas_eve_global_n <- global_normalised %>%
   arrange(Year, desc(Streams) ) %>%
   group_by(Track, Year) %>%
   filter(Rank %in% c(1:10)) %>%
-  mutate(Track = gsub(" -.*", "", Track)) %>%
+  mutate(Track = gsub(" -.*", "", Track),
+         Track = gsub("\\[.*", "", Track)) %>%
   arrange(Rank)
 top_10_xmas_eve_global_n
 
 top_10_xmas_eve_global_n %>%
-  mutate(Year = fct_reorder(Year, Stream_by_user)) %>%
-  ggplot(aes(reorder(Track, Streams), y = Stream_by_user, fill = as.factor(Rank))) +
-  geom_bar(stat = "identity")  +
+  ggplot(aes(reorder(Track, -Rank), y = Stream_by_user, fill = as.factor(Rank))) +
+  geom_bar(stat = "identity", show.legend = FALSE)  +
   coord_flip() +
   labs(x = "Track Name", y = "Streams per one million users", title = "Most Streamed Songs on Christmas Eve", 
        subtitle = "From 2017 to 2020*", 
        caption = "Source: Spotify Charts \n * Q3 data was used for 2020 as Q4 data is unavailable.") +
-  scale_fill_discrete(name = "Rank") +
   theme_classic() +
-  scale_y_continuous(expand = c(0,0)) +
-  facet_grid(cols = vars(Year))
-ggsave("Christmas_eve_top_10.png", height = 17.5, width = 34, units= "cm")
+  theme(axis.text.x = element_text(size=5),
+        axis.text.y = element_text(size = 8),
+        plot.caption = element_text(size=8, face = "italic", hjust = 1),
+        plot.title = element_text(hjust = 0.3)) +
+  scale_y_continuous(expand = c(0,0), breaks = seq(0,50000, 25000)) +
+  facet_grid(cols = vars(Year)) +
+  geom_text(data = tribble(~Track, ~Year, ~Stream_by_user, ~Rank,
+                          "All I Want for Christmas Is You", 2020, 50000, 1,
+                          "Last Christmas", 2020, 46000, 2,
+                          "Santa Tell Me",  2020, 35000, 3,
+                          "It's Beginning to Look a Lot like Christmas", 2020, 34000, 4,
+                          "Jingle Bell Rock", 2020, 34000, 5,
+                          "Rockin' Around The Christmas Tree", 2020, 33000, 6,
+                          "It's the Most Wonderful Time of the Year", 2020, 29000, 7,
+                       "Underneath the Tree",  2020, 26000, 8,
+                       "Let It Snow! Let It Snow! Let It Snow!", 2020,  22000, 9,
+                         "Feliz Navidad", 2020, 22000, 10), aes(x=reorder(Track, -Rank), y=Stream_by_user, label = Rank), 
+            size = 3, colour = "white")
+ggsave("Christmas_eve_top_10.png", height = 8.75, width = 17, units= "cm")
   
