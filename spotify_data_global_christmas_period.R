@@ -195,15 +195,15 @@ christmas <- top_10_xmas_global_n %>%
         axis.ticks.y = element_line(size = 0.2),
         axis.ticks.x = element_blank(),
         plot.caption = element_text(size= 5, face = "italic", hjust = 1, colour = "#1db954", family = "Gotham"),
-        plot.title = element_text(size = 11, colour = "#1db954", face = "bold", family = "Gotham"),
+        plot.title = element_text(size = 10, colour = "#1db954", face = "bold", family = "Gotham"),
         plot.background = element_rect(fill = "#191414", colour = "#191414"),
         plot.subtitle = element_text(size = 8, colour = "#b3b3b3", family = "Gotham"),
         panel.background = element_rect(fill = "#191414"),
         strip.background = element_rect(size = 1, fill = "#191414", colour = "#191414"),
         strip.text = element_text(size = 8, margin = margin(.1, 0, .1, 0, "cm"), colour = "#b3b3b3")) +  facet_grid(cols = vars(Year)) +
-  geom_text(aes(y=Stream_by_user, label = Stream_by_users, hjust = 1.5), 
+  geom_text(aes(y=Stream_by_user, label = Stream_by_users, hjust = 1.4), 
             size = 1.5, colour = "white") +
-  labs( y = "Streams per one million users", title = "Top 10 Songs Streamed on Christmas", 
+  labs( y = "Streams per one million users", title = "Top 10 Songs Streamed on Christmas Day", 
        subtitle = "From 2017 to 2020*", 
        caption = "Source: Spotify, Spotify Charts \n * Q3 data was used for 2020 as Q4 data is unavailable.")
 christmas
